@@ -77,4 +77,43 @@ $(document).ready(function(){
             return d/2;
           });
 
+  var svgScatter = d3.select("body")
+                     .append("svg")
+                     .attr("width", w2)
+                     .attr("height", h2);
+
+  svgScatter.selectAll("circle")
+            .data(scatterPlot)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d){
+              return d[0];
+            })
+            .attr("cy", function(d){
+              return d[1];
+            })
+            .attr("r", function(d){
+              return Math.sqrt(h2 - d[1]);
+            });
+
+  svgScatter.selectAll("text")
+            .data(scatterPlot)
+            .enter()
+            .append("text")
+            .text(function(d){
+              return d[0] + "," + d[1];
+            })
+            .attr("x", function(d){
+              return d[0];
+            })
+            .attr("y", function(d){
+              return d[1];
+            })
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "11px")
+            .attr("fill", "red");
+
+
+
+
 });
