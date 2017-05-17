@@ -3,15 +3,16 @@ $(document).ready(function(){
   var dataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19];
   var scatterPlot = [
                 [5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
-                [410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
+                [410, 12], [475, 44], [25, 67], [85, 21], [220, 88], [600, 150]
               ];
 
   var w1 = 500;
-  var h1 = 100;
+  var h1 = 300;
   var barPadding = 1;
+  var scatterPadding = 20;
 
-  var w2 = 650;
-  var h2 = 75;
+  var w2 = 500;
+  var h2 = 100;
 
   var svgBar = d3.select("body")
                  .append("svg")
@@ -77,42 +78,55 @@ $(document).ready(function(){
             return d/2;
           });
 
-  var svgScatter = d3.select("body")
-                     .append("svg")
-                     .attr("width", w2)
-                     .attr("height", h2);
+          //Create scale functions
+	var xScale = d3.scaleLinear()
+						 .domain([0, d3.max(scatterPlot, function(d) { return d[0]; })])
+						 .range([scatterPadding, w1 - scatterPadding * 2]);
 
-  svgScatter.selectAll("circle")
-            .data(scatterPlot)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d){
-              return d[0];
-            })
-            .attr("cy", function(d){
-              return d[1];
-            })
-            .attr("r", function(d){
-              return Math.sqrt(h2 - d[1]);
-            });
+	var yScale = d3.scaleLinear()
+						 .domain([0, d3.max(scatterPlot, function(d) { return d[1]; })])
+						 .range([h1 - scatterPadding, scatterPadding]);
 
-  svgScatter.selectAll("text")
-            .data(scatterPlot)
-            .enter()
-            .append("text")
-            .text(function(d){
-              return d[0] + "," + d[1];
-            })
-            .attr("x", function(d){
-              return d[0];
-            })
-            .attr("y", function(d){
-              return d[1];
-            })
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "11px")
-            .attr("fill", "red");
+  var rScale = d3.scaleLinear()
+                 .domain([0, d3.max(scatterPlot, function(d){ return d[1]; })])
+                 .range([2, 5]);
 
+	//Create SVG element
+	var svgScatter = d3.select("body")
+				.append("svg")
+				.attr("width", w1)
+				.attr("height", h1);
+
+	svgScatter.selectAll("circle")
+	   .data(scatterPlot)
+	   .enter()
+	   .append("circle")
+	   .attr("cx", function(d) {
+	   		return xScale(d[0]);
+	   })
+	   .attr("cy", function(d) {
+	   		return yScale(d[1]);
+	   })
+	   .attr("r", function(d) {
+	   		return rScale(d[1]);
+	   });
+
+	svgScatter.selectAll("text")
+	   .data(scatterPlot)
+	   .enter()
+	   .append("text")
+	   .text(function(d) {
+	   		return d[0] + "," + d[1];
+	   })
+	   .attr("x", function(d) {
+	   		return xScale(d[0]);
+	   })
+	   .attr("y", function(d) {
+	   		return yScale(d[1]);
+	   })
+	   .attr("font-family", "sans-serif")
+	   .attr("font-size", "11px")
+	   .attr("fill", "red");
 
 
 
