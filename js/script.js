@@ -9,7 +9,7 @@ $(document).ready(function(){
   var w1 = 500;
   var h1 = 300;
   var barPadding = 1;
-  var scatterPadding = 20;
+  var scatterPadding = 30;
 
   var w2 = 500;
   var h2 = 100;
@@ -91,11 +91,26 @@ $(document).ready(function(){
                  .domain([0, d3.max(scatterPlot, function(d){ return d[1]; })])
                  .range([2, 5]);
 
+
 	//Create SVG element
 	var svgScatter = d3.select("body")
 				.append("svg")
 				.attr("width", w1)
 				.attr("height", h1);
+
+  svgScatter.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + (h1 - scatterPadding) + ")")
+            .call(d3.axisBottom()
+            .scale(xScale)
+            .ticks(5));
+
+  svgScatter.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + scatterPadding + ",0)")
+            .call(d3.axisLeft()
+            .scale(yScale)
+            .ticks(5));
 
 	svgScatter.selectAll("circle")
 	   .data(scatterPlot)
